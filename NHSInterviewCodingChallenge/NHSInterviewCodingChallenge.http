@@ -1,0 +1,6 @@
+@NHSInterviewCodingChallenge_HostAddress = http://localhost:5081
+
+GET {{NHSInterviewCodingChallenge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
