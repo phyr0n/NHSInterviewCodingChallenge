@@ -1,19 +1,28 @@
-using System.Globalization;
 using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using NHSInterviewCodingChallenge.Models;
+using System.Globalization;
 
 namespace NHSInterviewCodingChallenge.Data;
 
 /// <summary>
-/// Represents a connection to the NHS database. Mocked for the purposes of this application.
+/// Represents a set of functionality needed to implement an NHS application database context.
 /// </summary>
-/// <param name="options">Options to be used for this database.</param>
-public sealed class NHSAppDbContext(DbContextOptions<NHSAppDbContext> options) : DbContext(options)
+public interface INHSAppDbContext
 {
     /// <summary>
     /// Patients in the database.
     /// </summary>
+    DbSet<Patient> Patients { get; }
+}
+
+/// <summary>
+/// Represents a connection to the NHS database.
+/// </summary>
+/// <param name="options">Options to be used for this database.</param>
+public sealed class NHSAppDbContext(DbContextOptions<NHSAppDbContext> options) : DbContext(options), INHSAppDbContext
+{
+    /// <inheritdoc/>
     public DbSet<Patient> Patients => Set<Patient>();
 
     /// <summary>

@@ -4,22 +4,30 @@ using NHSInterviewCodingChallenge.Services;
 
 namespace NHSInterviewCodingChallenge.Controllers;
 
+/// <summary>
+/// Responsible for handling incoming HTTP requests for services related to patients.
+/// </summary>
+/// <param name="patientService">The service responsible for handling business logic for patients.</param>
 [ApiController]
 [Route("[controller]")]
 public sealed class PatientController(IPatientService patientService) : ControllerBase
 {
-    private readonly IPatientService _patientService = patientService;
 
-    [HttpGet]
+	/// <summary>
+	/// Given an ID, gets the patient.
+	/// </summary>
+	/// <param name="id">The requested ID.</param>
+	/// <returns>If a patient was found in the database, this method will return a <c>200 OK</c> response; otherwise, a <c>404 NOT FOUND</c> will be returned.</returns>
+	[HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Description = "Patient found.", StatusCode = 200, Type = typeof(Patient))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Description = "Patient not found.")]
     public async Task<ActionResult<Patient>> Get(int id)
     {
-        Patient? patient = await _patientService.GetById(id);
+        Patient? patient = await patientService.GetById(id);
 
         if (patient is null)
         {
-            return Problem($"No patient could be found in the database with ID = {id}. Please try again.", HttpContext.Request.Path, StatusCodes.Status404NotFound, "Patient Not Found", "errors/PatientNotFound");
+            return NotFound(patient);
         }
 
         return Ok(patient);
